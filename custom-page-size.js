@@ -1,5 +1,5 @@
 /**
- * KDP Book Size Formatter for Google Docs (with KDP presets)
+ * Custom Page Size for Google Docs (with KDP presets)
  * 
  * This script adds custom page size functionality to Google Docs with KDP presets,
  * allowing authors to format their documents according to Kindle Direct Publishing
