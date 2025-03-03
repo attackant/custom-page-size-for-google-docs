@@ -1,6 +1,8 @@
 # Custom Page Size for Google Docs (with KDP presets)
 A Google Apps Script tool that lets you easily set custom page sizes in Google Docs, with built-in presets for Kindle Direct Publishing (KDP) and other common paper formats.
 
+![Screenshot of Custom Page Size Tool](./screenshot.png)
+
 ## Features
 - Set exact page dimensions with decimal precision
 - Built-in KDP presets for both paperback and hardcover books
