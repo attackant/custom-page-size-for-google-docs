@@ -18,7 +18,7 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, version 3 of the License.
  * 
- * @version 1.0.0
+ * @version 1.1.0
  * @author Damian Taggart
  * @link https://github.com/attackant/custom-page-size-for-google-docs
  */
@@ -93,6 +93,7 @@ function onOpen() {
   DocumentApp.getUi()
     .createMenu('Page Tools')
     .addItem('Set Custom Page Size', 'setCustomPageSize')
+    .addItem('Show Current Margins', 'showCurrentMargins')
     .addToUi();
 }
 
@@ -336,6 +337,45 @@ function setCustomPageSize() {
     .setHeight(650);
     
   ui.showModalDialog(htmlOutput, 'Set Custom Page Size');
+}
+
+/**
+ * Displays the current document margins and page size
+ */
+function showCurrentMargins() {
+  const doc = DocumentApp.getActiveDocument();
+  const body = doc.getBody();
+  
+  // Get current margins in points
+  const topMargin = body.getMarginTop();
+  const bottomMargin = body.getMarginBottom();
+  const leftMargin = body.getMarginLeft();
+  const rightMargin = body.getMarginRight();
+  
+  // Get current page size in points
+  const pageWidth = body.getPageWidth();
+  const pageHeight = body.getPageHeight();
+  
+  // Convert points to inches
+  const topInches = topMargin / POINTS_PER_INCH;
+  const bottomInches = bottomMargin / POINTS_PER_INCH;
+  const leftInches = leftMargin / POINTS_PER_INCH;
+  const rightInches = rightMargin / POINTS_PER_INCH;
+  const widthInches = pageWidth / POINTS_PER_INCH;
+  const heightInches = pageHeight / POINTS_PER_INCH;
+  
+  // Display the margins and page size
+  const ui = DocumentApp.getUi();
+  ui.alert(
+    'Page Settings',
+    `Page Size: ${widthInches.toFixed(2)}" × ${heightInches.toFixed(2)}" (${pageWidth} × ${pageHeight} pts)\n\n` +
+    `Margins:\n` +
+    `Top: ${topInches.toFixed(2)}" (${topMargin} pts)\n` +
+    `Bottom: ${bottomInches.toFixed(2)}" (${bottomMargin} pts)\n` +
+    `Left: ${leftInches.toFixed(2)}" (${leftMargin} pts)\n` +
+    `Right: ${rightInches.toFixed(2)}" (${rightMargin} pts)`,
+    ui.ButtonSet.OK
+  );
 }
 
 /**
