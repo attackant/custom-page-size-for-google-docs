@@ -1,10 +1,10 @@
 /**
  * Custom Page Size for Google Docs (with KDP presets)
- * 
+ *
  * This script adds custom page size functionality to Google Docs with KDP presets,
  * allowing authors to format their documents according to Kindle Direct Publishing
  * book size requirements.
- * 
+ *
  * Features:
  * - Standard KDP paperback and hardcover sizes
  * - Common paper sizes (Letter, A4, etc.)
@@ -12,12 +12,12 @@
  * - Paper type selection (white/cream)
  * - Ink type selection (black/color)
  * - Margin presets and custom margins
- * 
+ *
  * @license GPL-3.0
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, version 3 of the License.
- * 
+ *
  * @version 1.1.0
  * @author Damian Taggart
  * @link https://github.com/attackant/custom-page-size-for-google-docs
@@ -35,50 +35,163 @@ const COLOR_WHITE = '#FFFFFF';
 const COLOR_CREAM = '#F8F3E6';
 
 // KDP size constraints
-const MIN_WIDTH = 4;      // Minimum width in inches
-const MAX_WIDTH = 8.5;    // Maximum width in inches
-const MIN_HEIGHT = 6;     // Minimum height in inches
+const MIN_WIDTH = 4; // Minimum width in inches
+const MAX_WIDTH = 8.5; // Maximum width in inches
+const MIN_HEIGHT = 6; // Minimum height in inches
 const MAX_HEIGHT = 11.69; // Maximum height in inches
 
 // Define KDP book sizes (in inches)
 const KDP_SIZES = {
-  // Paperback sizes
-  'Paperback - 5 x 8': { width: 5, height: 8, type: 'paperback' },
-  'Paperback - 5.06 x 7.81': { width: 5.06, height: 7.81, type: 'paperback' },
-  'Paperback - 5.25 x 8': { width: 5.25, height: 8, type: 'paperback' },
-  'Paperback - 5.5 x 8.5': { width: 5.5, height: 8.5, type: 'paperback' },
-  'Paperback - 6 x 9': { width: 6, height: 9, type: 'paperback' },
-  'Paperback - 6.14 x 9.21': { width: 6.14, height: 9.21, type: 'paperback' },
-  'Paperback - 6.69 x 9.61': { width: 6.69, height: 9.61, type: 'paperback' },
-  'Paperback - 7 x 10': { width: 7, height: 10, type: 'paperback' },
-  'Paperback - 7.44 x 9.69': { width: 7.44, height: 9.69, type: 'paperback' },
-  'Paperback - 7.5 x 9.25': { width: 7.5, height: 9.25, type: 'paperback' },
-  'Paperback - 8 x 10': { width: 8, height: 10, type: 'paperback' },
-  'Paperback - 8.25 x 6': { width: 8.25, height: 6, type: 'paperback' },
-  'Paperback - 8.25 x 8.25': { width: 8.25, height: 8.25, type: 'paperback' },
-  'Paperback - 8.5 x 8.5': { width: 8.5, height: 8.5, type: 'paperback' },
-  'Paperback - 8.5 x 11': { width: 8.5, height: 11, type: 'paperback' },
-  
-  // Hardcover sizes
-  'Hardcover - 5 x 8': { width: 5, height: 8, type: 'hardcover' },
-  'Hardcover - 5.5 x 8.5': { width: 5.5, height: 8.5, type: 'hardcover' },
-  'Hardcover - 6 x 9': { width: 6, height: 9, type: 'hardcover' },
-  'Hardcover - 7 x 10': { width: 7, height: 10, type: 'hardcover' },
-  'Hardcover - 8 x 10': { width: 8, height: 10, type: 'hardcover' },
-  'Hardcover - 8.25 x 8.25': { width: 8.25, height: 8.25, type: 'hardcover' },
-  'Hardcover - 8.5 x 8.5': { width: 8.5, height: 8.5, type: 'hardcover' },
-  'Hardcover - 8.5 x 11': { width: 8.5, height: 11, type: 'hardcover' },
+    // Paperback sizes
+    'Paperback - 5 x 8': {
+        width: 5,
+        height: 8,
+        type: 'paperback'
+    },
+    'Paperback - 5.06 x 7.81': {
+        width: 5.06,
+        height: 7.81,
+        type: 'paperback'
+    },
+    'Paperback - 5.25 x 8': {
+        width: 5.25,
+        height: 8,
+        type: 'paperback'
+    },
+    'Paperback - 5.5 x 8.5': {
+        width: 5.5,
+        height: 8.5,
+        type: 'paperback'
+    },
+    'Paperback - 6 x 9': {
+        width: 6,
+        height: 9,
+        type: 'paperback'
+    },
+    'Paperback - 6.14 x 9.21': {
+        width: 6.14,
+        height: 9.21,
+        type: 'paperback'
+    },
+    'Paperback - 6.69 x 9.61': {
+        width: 6.69,
+        height: 9.61,
+        type: 'paperback'
+    },
+    'Paperback - 7 x 10': {
+        width: 7,
+        height: 10,
+        type: 'paperback'
+    },
+    'Paperback - 7.44 x 9.69': {
+        width: 7.44,
+        height: 9.69,
+        type: 'paperback'
+    },
+    'Paperback - 7.5 x 9.25': {
+        width: 7.5,
+        height: 9.25,
+        type: 'paperback'
+    },
+    'Paperback - 8 x 10': {
+        width: 8,
+        height: 10,
+        type: 'paperback'
+    },
+    'Paperback - 8.25 x 6': {
+        width: 8.25,
+        height: 6,
+        type: 'paperback'
+    },
+    'Paperback - 8.25 x 8.25': {
+        width: 8.25,
+        height: 8.25,
+        type: 'paperback'
+    },
+    'Paperback - 8.5 x 8.5': {
+        width: 8.5,
+        height: 8.5,
+        type: 'paperback'
+    },
+    'Paperback - 8.5 x 11': {
+        width: 8.5,
+        height: 11,
+        type: 'paperback'
+    },
+
+    // Hardcover sizes
+    'Hardcover - 5 x 8': {
+        width: 5,
+        height: 8,
+        type: 'hardcover'
+    },
+    'Hardcover - 5.5 x 8.5': {
+        width: 5.5,
+        height: 8.5,
+        type: 'hardcover'
+    },
+    'Hardcover - 6 x 9': {
+        width: 6,
+        height: 9,
+        type: 'hardcover'
+    },
+    'Hardcover - 7 x 10': {
+        width: 7,
+        height: 10,
+        type: 'hardcover'
+    },
+    'Hardcover - 8 x 10': {
+        width: 8,
+        height: 10,
+        type: 'hardcover'
+    },
+    'Hardcover - 8.25 x 8.25': {
+        width: 8.25,
+        height: 8.25,
+        type: 'hardcover'
+    },
+    'Hardcover - 8.5 x 8.5': {
+        width: 8.5,
+        height: 8.5,
+        type: 'hardcover'
+    },
+    'Hardcover - 8.5 x 11': {
+        width: 8.5,
+        height: 11,
+        type: 'hardcover'
+    },
 };
 
 // Common non-KDP paper sizes
 const COMMON_SIZES = {
-  'Letter': { width: 8.5, height: 11 },
-  'Legal': { width: 8.5, height: 14 },
-  'Tabloid': { width: 11, height: 17 },
-  'A4': { width: 8.27, height: 11.69 },
-  'A5': { width: 5.83, height: 8.27 },
-  'A3': { width: 11.69, height: 16.54 },
-  'Custom': { width: 0, height: 0 }
+    'Letter': {
+        width: 8.5,
+        height: 11
+    },
+    'Legal': {
+        width: 8.5,
+        height: 14
+    },
+    'Tabloid': {
+        width: 11,
+        height: 17
+    },
+    'A4': {
+        width: 8.27,
+        height: 11.69
+    },
+    'A5': {
+        width: 5.83,
+        height: 8.27
+    },
+    'A3': {
+        width: 11.69,
+        height: 16.54
+    },
+    'Custom': {
+        width: 0,
+        height: 0
+    }
 };
 
 // ========================
@@ -90,49 +203,88 @@ const COMMON_SIZES = {
  * This is a trigger function automatically executed by Google Docs
  */
 function onOpen() {
-  DocumentApp.getUi()
-    .createMenu('Page Tools')
-    .addItem('Set Custom Page Size', 'setCustomPageSize')
-    .addItem('Show Current Margins', 'showCurrentMargins')
-    .addToUi();
+    DocumentApp.getUi()
+        .createMenu('Page Tools')
+        .addItem('Set Custom Page Size', 'setCustomPageSize')
+        .addItem('Show Current Margins', 'showCurrentMargins')
+        .addToUi();
+}
+
+/**
+ * Retrieves stored document settings
+ * @return {Object} Saved document settings or default values
+ */
+function getDocumentSettings() {
+    const properties = PropertiesService.getDocumentProperties();
+    const settingsJson = properties.getProperty('kdpFormatterSettings');
+
+    if (settingsJson) {
+        return JSON.parse(settingsJson);
+    } else {
+        // Return default settings if none found
+        return {
+            sizeName: '',
+            width: 6,
+            height: 9,
+            bookType: 'paperback',
+            paperType: 'white',
+            inkType: 'black',
+            marginType: 'default',
+            customMargins: {
+                top: 1,
+                bottom: 1,
+                inside: 1,
+                outside: 1
+            },
+            customMirroredMargins: {
+                top: 1,
+                bottom: 1,
+                inside: 1.25,
+                outside: 0.75
+            }
+        };
+    }
 }
 
 /**
  * Displays dialog for setting page size and formatting options
  */
 function setCustomPageSize() {
-  const ui = DocumentApp.getUi();
-  
-  // Create grouped dropdown lists for KDP sizes
-  let paperbackDropdownHtml = '<optgroup label="Paperback Sizes">';
-  let hardcoverDropdownHtml = '<optgroup label="Hardcover Sizes">';
-  
-  for (const size in KDP_SIZES) {
-    const option = `<option value="${size}">${size.replace(/^(Paperback|Hardcover) - /, '')} (${KDP_SIZES[size].width}" × ${KDP_SIZES[size].height}")</option>`;
-    if (KDP_SIZES[size].type === 'paperback') {
-      paperbackDropdownHtml += option;
-    } else {
-      hardcoverDropdownHtml += option;
+    const ui = DocumentApp.getUi();
+
+    // Get current document settings
+    const currentSettings = getDocumentSettings();
+
+    // Create grouped dropdown lists for KDP sizes
+    let paperbackDropdownHtml = '<optgroup label="Paperback Sizes">';
+    let hardcoverDropdownHtml = '<optgroup label="Hardcover Sizes">';
+
+    for (const size in KDP_SIZES) {
+        const option = `<option value="${size}">${size.replace(/^(Paperback|Hardcover) - /, '')} (${KDP_SIZES[size].width}" × ${KDP_SIZES[size].height}")</option>`;
+        if (KDP_SIZES[size].type === 'paperback') {
+            paperbackDropdownHtml += option;
+        } else {
+            hardcoverDropdownHtml += option;
+        }
     }
-  }
-  
-  paperbackDropdownHtml += '</optgroup>';
-  hardcoverDropdownHtml += '</optgroup>';
-  
-  // Create a dropdown list HTML for common sizes
-  let commonDropdownHtml = '<optgroup label="Common Sizes">';
-  for (const size in COMMON_SIZES) {
-    if (size !== 'Custom') {
-      commonDropdownHtml += `<option value="${size}">${size} (${COMMON_SIZES[size].width}" × ${COMMON_SIZES[size].height}")</option>`;
-    } else {
-      commonDropdownHtml += `<option value="${size}">${size}</option>`;
+
+    paperbackDropdownHtml += '</optgroup>';
+    hardcoverDropdownHtml += '</optgroup>';
+
+    // Create a dropdown list HTML for common sizes
+    let commonDropdownHtml = '<optgroup label="Common Sizes">';
+    for (const size in COMMON_SIZES) {
+        if (size !== 'Custom') {
+            commonDropdownHtml += `<option value="${size}">${size} (${COMMON_SIZES[size].width}" × ${COMMON_SIZES[size].height}")</option>`;
+        } else {
+            commonDropdownHtml += `<option value="${size}">${size}</option>`;
+        }
     }
-  }
-  commonDropdownHtml += '</optgroup>';
-  
-  // Create the HTML for the dialog
-  const htmlOutput = HtmlService
-    .createHtmlOutput(`
+    commonDropdownHtml += '</optgroup>';
+
+    // Create the HTML for the dialog
+    const htmlOutput = HtmlService
+        .createHtmlOutput(`
       <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         .form-group { margin-bottom: 15px; }
@@ -208,6 +360,7 @@ function setCustomPageSize() {
           <option value="narrow">Narrow (0.5" all sides)</option>
           <option value="wide">Wide (1.25" all sides)</option>
           <option value="mirrored">Mirrored (Book-style)</option>
+          <option value="customMirrored">Custom Mirrored (Book-style)</option>
           <option value="custom">Custom</option>
         </select>
       </div>
@@ -231,12 +384,91 @@ function setCustomPageSize() {
         </div>
       </div>
       
+      <div id="customMirroredMargins" style="display: none;">
+        <div class="form-group">
+          <label for="topMirroredMargin">Top Margin (inches):</label>
+          <input type="number" id="topMirroredMargin" step="0.1" min="0.25" value="1">
+        </div>
+        <div class="form-group">
+          <label for="bottomMirroredMargin">Bottom Margin (inches):</label>
+          <input type="number" id="bottomMirroredMargin" step="0.1" min="0.25" value="1">
+        </div>
+        <div class="form-group">
+          <label for="insideMirroredMargin">Inside Margin (inches):</label>
+          <input type="number" id="insideMirroredMargin" step="0.1" min="0.25" value="1.25">
+          <div class="note">Inside margin should be larger for binding space</div>
+        </div>
+        <div class="form-group">
+          <label for="outsideMirroredMargin">Outside Margin (inches):</label>
+          <input type="number" id="outsideMirroredMargin" step="0.1" min="0.25" value="0.75">
+        </div>
+      </div>
+      
       <div class="button-group">
         <button id="cancelBtn" onclick="google.script.host.close()">Cancel</button>
         <button id="applyBtn" onclick="applySize()">Apply</button>
       </div>
       
       <script>
+        // Current document settings
+        const currentSettings = ${JSON.stringify(currentSettings)};
+        
+        // Function to load saved settings
+        function loadSavedSettings() {
+          // Set book size dropdown
+          if (currentSettings.sizeName) {
+            document.getElementById('bookSize').value = currentSettings.sizeName;
+            
+            // Show custom fields if "Custom" is selected
+            if (currentSettings.sizeName === 'Custom') {
+              document.getElementById('customFields').style.display = 'block';
+              document.getElementById('customWidth').value = currentSettings.width;
+              document.getElementById('customHeight').value = currentSettings.height;
+            }
+          }
+          
+          // Set other form values
+          document.getElementById('bookType').value = currentSettings.bookType || 'paperback';
+          document.getElementById('paperType').value = currentSettings.paperType || 'white';
+          document.getElementById('inkType').value = currentSettings.inkType || 'black';
+          
+          // Set margin type
+          if (currentSettings.marginType) {
+            document.getElementById('margins').value = currentSettings.marginType;
+            
+            // Show appropriate margin fields based on selection
+            if (currentSettings.marginType === 'custom') {
+              document.getElementById('customMargins').style.display = 'block';
+              document.getElementById('customMirroredMargins').style.display = 'none';
+              
+              // Set custom margin values if available
+              if (currentSettings.customMargins) {
+                document.getElementById('topMargin').value = currentSettings.customMargins.top || 1;
+                document.getElementById('bottomMargin').value = currentSettings.customMargins.bottom || 1;
+                document.getElementById('insideMargin').value = currentSettings.customMargins.inside || 1;
+                document.getElementById('outsideMargin').value = currentSettings.customMargins.outside || 1;
+              }
+            } else if (currentSettings.marginType === 'customMirrored') {
+              document.getElementById('customMargins').style.display = 'none';
+              document.getElementById('customMirroredMargins').style.display = 'block';
+              
+              // Set custom mirrored margin values if available
+              if (currentSettings.customMirroredMargins) {
+                document.getElementById('topMirroredMargin').value = currentSettings.customMirroredMargins.top || 1;
+                document.getElementById('bottomMirroredMargin').value = currentSettings.customMirroredMargins.bottom || 1;
+                document.getElementById('insideMirroredMargin').value = currentSettings.customMirroredMargins.inside || 1.25;
+                document.getElementById('outsideMirroredMargin').value = currentSettings.customMirroredMargins.outside || 0.75;
+              }
+            } else {
+              document.getElementById('customMargins').style.display = 'none';
+              document.getElementById('customMirroredMargins').style.display = 'none';
+            }
+          }
+          
+          // Update ink options based on book type
+          updateInkOptions();
+        }
+        
         // Show custom fields when "Custom" is selected
         document.getElementById('bookSize').addEventListener('change', function() {
           if (this.value === 'Custom') {
@@ -274,12 +506,17 @@ function setCustomPageSize() {
           }
         }
         
-        // Handle custom margins
+        // Handle margin type selection
         document.getElementById('margins').addEventListener('change', function() {
           if (this.value === 'custom') {
             document.getElementById('customMargins').style.display = 'block';
+            document.getElementById('customMirroredMargins').style.display = 'none';
+          } else if (this.value === 'customMirrored') {
+            document.getElementById('customMargins').style.display = 'none';
+            document.getElementById('customMirroredMargins').style.display = 'block';
           } else {
             document.getElementById('customMargins').style.display = 'none';
+            document.getElementById('customMirroredMargins').style.display = 'none';
           }
         });
         
@@ -293,13 +530,21 @@ function setCustomPageSize() {
           let width, height;
           let marginSettings = {};
           
-          // Get margin settings
+          // Get margin settings based on selected type
           if (marginType === 'custom') {
             marginSettings = {
               top: parseFloat(document.getElementById('topMargin').value),
               bottom: parseFloat(document.getElementById('bottomMargin').value),
               inside: parseFloat(document.getElementById('insideMargin').value),
               outside: parseFloat(document.getElementById('outsideMargin').value)
+            };
+          } else if (marginType === 'customMirrored') {
+            marginSettings = {
+              top: parseFloat(document.getElementById('topMirroredMargin').value),
+              bottom: parseFloat(document.getElementById('bottomMirroredMargin').value),
+              inside: parseFloat(document.getElementById('insideMirroredMargin').value),
+              outside: parseFloat(document.getElementById('outsideMirroredMargin').value),
+              isMirrored: true
             };
           } else {
             marginSettings = {
@@ -316,9 +561,9 @@ function setCustomPageSize() {
               return;
             }
             
-            google.script.run.withSuccessHandler(onSuccess).applyCustomPageSize(width, height, bookType, paperType, inkType, marginSettings);
+            google.script.run.withSuccessHandler(onSuccess).applyCustomPageSize(width, height, bookType, paperType, inkType, marginSettings, marginType);
           } else if (selectedSize) {
-            google.script.run.withSuccessHandler(onSuccess).applyPageSettings(selectedSize, bookType, paperType, inkType, marginSettings);
+            google.script.run.withSuccessHandler(onSuccess).applyPageSettings(selectedSize, bookType, paperType, inkType, marginSettings, marginType);
           } else {
             alert('Please select a page size or enter custom dimensions.');
           }
@@ -329,152 +574,157 @@ function setCustomPageSize() {
           google.script.host.close();
         }
         
-        // Initialize ink options
-        updateInkOptions();
+        // Initialize ink options and load saved settings
+        document.addEventListener('DOMContentLoaded', function() {
+          loadSavedSettings();
+          updateInkOptions();
+        });
       </script>
     `)
-    .setWidth(450)
-    .setHeight(650);
-    
-  ui.showModalDialog(htmlOutput, 'Set Custom Page Size');
+        .setWidth(450)
+        .setHeight(700); // Increased height to accommodate new fields
+
+    ui.showModalDialog(htmlOutput, 'Set Custom Page Size');
 }
 
 /**
  * Displays the current document margins and page size
  */
 function showCurrentMargins() {
-  const doc = DocumentApp.getActiveDocument();
-  const body = doc.getBody();
-  
-  // Get current margins in points
-  const topMargin = body.getMarginTop();
-  const bottomMargin = body.getMarginBottom();
-  const leftMargin = body.getMarginLeft();
-  const rightMargin = body.getMarginRight();
-  
-  // Get current page size in points
-  const pageWidth = body.getPageWidth();
-  const pageHeight = body.getPageHeight();
-  
-  // Convert points to inches
-  const topInches = topMargin / POINTS_PER_INCH;
-  const bottomInches = bottomMargin / POINTS_PER_INCH;
-  const leftInches = leftMargin / POINTS_PER_INCH;
-  const rightInches = rightMargin / POINTS_PER_INCH;
-  const widthInches = pageWidth / POINTS_PER_INCH;
-  const heightInches = pageHeight / POINTS_PER_INCH;
-  
-  // Display the margins and page size
-  const ui = DocumentApp.getUi();
-  ui.alert(
-    'Page Settings',
-    `Page Size: ${widthInches.toFixed(2)}" × ${heightInches.toFixed(2)}" (${pageWidth} × ${pageHeight} pts)\n\n` +
-    `Margins:\n` +
-    `Top: ${topInches.toFixed(2)}" (${topMargin} pts)\n` +
-    `Bottom: ${bottomInches.toFixed(2)}" (${bottomMargin} pts)\n` +
-    `Left: ${leftInches.toFixed(2)}" (${leftMargin} pts)\n` +
-    `Right: ${rightInches.toFixed(2)}" (${rightMargin} pts)`,
-    ui.ButtonSet.OK
-  );
+    const doc = DocumentApp.getActiveDocument();
+    const body = doc.getBody();
+
+    // Get current margins in points
+    const topMargin = body.getMarginTop();
+    const bottomMargin = body.getMarginBottom();
+    const leftMargin = body.getMarginLeft();
+    const rightMargin = body.getMarginRight();
+
+    // Get current page size in points
+    const pageWidth = body.getPageWidth();
+    const pageHeight = body.getPageHeight();
+
+    // Convert points to inches
+    const topInches = topMargin / POINTS_PER_INCH;
+    const bottomInches = bottomMargin / POINTS_PER_INCH;
+    const leftInches = leftMargin / POINTS_PER_INCH;
+    const rightInches = rightMargin / POINTS_PER_INCH;
+    const widthInches = pageWidth / POINTS_PER_INCH;
+    const heightInches = pageHeight / POINTS_PER_INCH;
+
+    // Display the margins and page size
+    const ui = DocumentApp.getUi();
+    ui.alert(
+        'Page Settings',
+        `Page Size: ${widthInches.toFixed(2)}" × ${heightInches.toFixed(2)}" (${pageWidth} × ${pageHeight} pts)\n\n` +
+        `Margins:\n` +
+        `Top: ${topInches.toFixed(2)}" (${topMargin} pts)\n` +
+        `Bottom: ${bottomInches.toFixed(2)}" (${bottomMargin} pts)\n` +
+        `Left: ${leftInches.toFixed(2)}" (${leftMargin} pts)\n` +
+        `Right: ${rightInches.toFixed(2)}" (${rightMargin} pts)`,
+        ui.ButtonSet.OK
+    );
 }
 
 /**
  * Applies predefined page settings based on selected size name
- * 
+ *
  * @param {string} sizeName - Name of the selected size from KDP_SIZES or COMMON_SIZES
  * @param {string} bookType - Either 'paperback' or 'hardcover'
  * @param {string} paperType - Either 'white' or 'cream'
  * @param {string} inkType - 'black', 'premium', or 'standard'
  * @param {Object} marginSettings - Margin settings object
+ * @param {string} marginType - Type of margins to apply
  * @return {string} Status message
  */
-function applyPageSettings(sizeName, bookType, paperType, inkType, marginSettings) {
-  try {
-    let widthInches, heightInches;
-    
-    if (KDP_SIZES[sizeName]) {
-      widthInches = KDP_SIZES[sizeName].width;
-      heightInches = KDP_SIZES[sizeName].height;
-    } else {
-      widthInches = COMMON_SIZES[sizeName].width;
-      heightInches = COMMON_SIZES[sizeName].height;
+function applyPageSettings(sizeName, bookType, paperType, inkType, marginSettings, marginType) {
+    try {
+        let widthInches, heightInches;
+
+        if (KDP_SIZES[sizeName]) {
+            widthInches = KDP_SIZES[sizeName].width;
+            heightInches = KDP_SIZES[sizeName].height;
+        } else {
+            widthInches = COMMON_SIZES[sizeName].width;
+            heightInches = COMMON_SIZES[sizeName].height;
+        }
+
+        // Convert inches to points
+        const pageWidth = widthInches * POINTS_PER_INCH;
+        const pageHeight = heightInches * POINTS_PER_INCH;
+
+        // Apply the page size to the document
+        const doc = DocumentApp.getActiveDocument();
+        const body = doc.getBody();
+
+        body.setPageWidth(pageWidth);
+        body.setPageHeight(pageHeight);
+
+        // Set background color based on paper type
+        body.setBackgroundColor(paperType === 'cream' ? COLOR_CREAM : COLOR_WHITE);
+
+        // Apply margins
+        applyMargins(body, marginSettings);
+
+        // Save document properties to remember settings
+        saveDocumentSettings(sizeName, widthInches, heightInches, bookType, paperType, inkType, marginType, marginSettings);
+
+        return "Page size set to " + sizeName.replace(/^(Paperback|Hardcover) - /, '') +
+            " (" + widthInches + "\" × " + heightInches + "\") as " + bookType +
+            " with " + paperType + " paper and " + inkType + " ink.";
+    } catch (error) {
+        Logger.log("Error in applyPageSettings: " + error);
+        return "Error: " + error.toString();
     }
-    
-    // Convert inches to points
-    const pageWidth = widthInches * POINTS_PER_INCH;
-    const pageHeight = heightInches * POINTS_PER_INCH;
-    
-    // Apply the page size to the document
-    const doc = DocumentApp.getActiveDocument();
-    const body = doc.getBody();
-    
-    body.setPageWidth(pageWidth);
-    body.setPageHeight(pageHeight);
-    
-    // Set background color based on paper type
-    body.setBackgroundColor(paperType === 'cream' ? COLOR_CREAM : COLOR_WHITE);
-    
-    // Apply margins
-    applyMargins(body, marginSettings);
-    
-    // Save document properties to remember settings
-    saveDocumentSettings(sizeName, widthInches, heightInches, bookType, paperType, inkType);
-    
-    return "Page size set to " + sizeName.replace(/^(Paperback|Hardcover) - /, '') + 
-           " (" + widthInches + "\" × " + heightInches + "\") as " + bookType + 
-           " with " + paperType + " paper and " + inkType + " ink.";
-  } catch (error) {
-    Logger.log("Error in applyPageSettings: " + error);
-    return "Error: " + error.toString();
-  }
 }
 
 /**
  * Applies custom page size with validation
- * 
+ *
  * @param {number} widthInches - Page width in inches
  * @param {number} heightInches - Page height in inches
  * @param {string} bookType - Either 'paperback' or 'hardcover'
  * @param {string} paperType - Either 'white' or 'cream'
  * @param {string} inkType - 'black', 'premium', or 'standard'
  * @param {Object} marginSettings - Margin settings object
+ * @param {string} marginType - Type of margins to apply
  * @return {string} Status message
  */
-function applyCustomPageSize(widthInches, heightInches, bookType, paperType, inkType, marginSettings) {
-  try {
-    // Server-side validation
-    if (!widthInches || !heightInches || 
-        widthInches < MIN_WIDTH || widthInches > MAX_WIDTH || 
-        heightInches < MIN_HEIGHT || heightInches > MAX_HEIGHT) {
-      return `Error: Invalid dimensions. Width must be between ${MIN_WIDTH}" and ${MAX_WIDTH}", and height between ${MIN_HEIGHT}" and ${MAX_HEIGHT}".`;
+function applyCustomPageSize(widthInches, heightInches, bookType, paperType, inkType, marginSettings, marginType) {
+    try {
+        // Server-side validation
+        if (!widthInches || !heightInches ||
+            widthInches < MIN_WIDTH || widthInches > MAX_WIDTH ||
+            heightInches < MIN_HEIGHT || heightInches > MAX_HEIGHT) {
+            return `Error: Invalid dimensions. Width must be between ${MIN_WIDTH}" and ${MAX_WIDTH}", and height between ${MIN_HEIGHT}" and ${MAX_HEIGHT}".`;
+        }
+
+        // Convert inches to points
+        const pageWidth = widthInches * POINTS_PER_INCH;
+        const pageHeight = heightInches * POINTS_PER_INCH;
+
+        // Apply the page size to the document
+        const doc = DocumentApp.getActiveDocument();
+        const body = doc.getBody();
+
+        body.setPageWidth(pageWidth);
+        body.setPageHeight(pageHeight);
+
+        // Set background color based on paper type
+        body.setBackgroundColor(paperType === 'cream' ? COLOR_CREAM : COLOR_WHITE);
+
+        // Apply margins
+        applyMargins(body, marginSettings);
+
+        // Save document properties to remember settings
+        saveDocumentSettings('Custom', widthInches, heightInches, bookType, paperType, inkType, marginType, marginSettings);
+
+        return "Custom page size set to " + widthInches.toFixed(2) + "\" × " + heightInches.toFixed(2) +
+            "\" as " + bookType + " with " + paperType + " paper and " + inkType + " ink.";
+    } catch (error) {
+        Logger.log("Error in applyCustomPageSize: " + error);
+        return "Error: " + error.toString();
     }
-    
-    // Convert inches to points
-    const pageWidth = widthInches * POINTS_PER_INCH;
-    const pageHeight = heightInches * POINTS_PER_INCH;
-    
-    // Apply the page size to the document
-    const doc = DocumentApp.getActiveDocument();
-    const body = doc.getBody();
-    
-    body.setPageWidth(pageWidth);
-    body.setPageHeight(pageHeight);
-    
-    // Set background color based on paper type
-    body.setBackgroundColor(paperType === 'cream' ? COLOR_CREAM : COLOR_WHITE);
-    
-    // Apply margins
-    applyMargins(body, marginSettings);
-    
-    // Save document properties to remember settings
-    saveDocumentSettings('Custom', widthInches, heightInches, bookType, paperType, inkType);
-    
-    return "Custom page size set to " + widthInches.toFixed(2) + "\" × " + heightInches.toFixed(2) + 
-           "\" as " + bookType + " with " + paperType + " paper and " + inkType + " ink.";
-  } catch (error) {
-    Logger.log("Error in applyCustomPageSize: " + error);
-    return "Error: " + error.toString();
-  }
 }
 
 // ========================
@@ -483,70 +733,81 @@ function applyCustomPageSize(widthInches, heightInches, bookType, paperType, ink
 
 /**
  * Applies margin settings to document body
- * 
+ *
  * @param {Body} body - Document body object
  * @param {Object} marginSettings - Margin settings object
  */
 function applyMargins(body, marginSettings) {
-  if (marginSettings.type) {
-    // Predefined margin settings
-    switch (marginSettings.type) {
-      case 'default':
-        body.setMarginTop(1 * POINTS_PER_INCH);
-        body.setMarginBottom(1 * POINTS_PER_INCH);
-        body.setMarginLeft(1 * POINTS_PER_INCH);
-        body.setMarginRight(1 * POINTS_PER_INCH);
-        break;
-      case 'narrow':
-        body.setMarginTop(0.5 * POINTS_PER_INCH);
-        body.setMarginBottom(0.5 * POINTS_PER_INCH);
-        body.setMarginLeft(0.5 * POINTS_PER_INCH);
-        body.setMarginRight(0.5 * POINTS_PER_INCH);
-        break;
-      case 'wide':
-        body.setMarginTop(1.25 * POINTS_PER_INCH);
-        body.setMarginBottom(1.25 * POINTS_PER_INCH);
-        body.setMarginLeft(1.25 * POINTS_PER_INCH);
-        body.setMarginRight(1.25 * POINTS_PER_INCH);
-        break;
-      case 'mirrored': // Book-style margins
-        body.setMarginTop(1 * POINTS_PER_INCH);
-        body.setMarginBottom(1 * POINTS_PER_INCH);
-        body.setMarginLeft(1.25 * POINTS_PER_INCH); // Inside margin (for binding)
-        body.setMarginRight(0.75 * POINTS_PER_INCH); // Outside margin
-        break;
+    if (marginSettings.type) {
+        // Predefined margin settings
+        switch (marginSettings.type) {
+            case 'default':
+                body.setMarginTop(1 * POINTS_PER_INCH);
+                body.setMarginBottom(1 * POINTS_PER_INCH);
+                body.setMarginLeft(1 * POINTS_PER_INCH);
+                body.setMarginRight(1 * POINTS_PER_INCH);
+                break;
+            case 'narrow':
+                body.setMarginTop(0.5 * POINTS_PER_INCH);
+                body.setMarginBottom(0.5 * POINTS_PER_INCH);
+                body.setMarginLeft(0.5 * POINTS_PER_INCH);
+                body.setMarginRight(0.5 * POINTS_PER_INCH);
+                break;
+            case 'wide':
+                body.setMarginTop(1.25 * POINTS_PER_INCH);
+                body.setMarginBottom(1.25 * POINTS_PER_INCH);
+                body.setMarginLeft(1.25 * POINTS_PER_INCH);
+                body.setMarginRight(1.25 * POINTS_PER_INCH);
+                break;
+            case 'mirrored': // Book-style margins
+                body.setMarginTop(1 * POINTS_PER_INCH);
+                body.setMarginBottom(1 * POINTS_PER_INCH);
+                body.setMarginLeft(1.25 * POINTS_PER_INCH); // Inside margin (for binding)
+                body.setMarginRight(0.75 * POINTS_PER_INCH); // Outside margin
+                break;
+        }
+    } else if (marginSettings.isMirrored) {
+        // Custom mirrored margin settings
+        body.setMarginTop(marginSettings.top * POINTS_PER_INCH);
+        body.setMarginBottom(marginSettings.bottom * POINTS_PER_INCH);
+        body.setMarginLeft(marginSettings.inside * POINTS_PER_INCH);
+        body.setMarginRight(marginSettings.outside * POINTS_PER_INCH);
+    } else {
+        // Custom margin settings
+        body.setMarginTop(marginSettings.top * POINTS_PER_INCH);
+        body.setMarginBottom(marginSettings.bottom * POINTS_PER_INCH);
+        body.setMarginLeft(marginSettings.inside * POINTS_PER_INCH);
+        body.setMarginRight(marginSettings.outside * POINTS_PER_INCH);
     }
-  } else {
-    // Custom margin settings
-    body.setMarginTop(marginSettings.top * POINTS_PER_INCH);
-    body.setMarginBottom(marginSettings.bottom * POINTS_PER_INCH);
-    body.setMarginLeft(marginSettings.inside * POINTS_PER_INCH);
-    body.setMarginRight(marginSettings.outside * POINTS_PER_INCH);
-  }
 }
 
 /**
  * Saves current document settings to document properties
  * This allows the settings to be retrieved later
- * 
+ *
  * @param {string} sizeName - Name of the selected size
  * @param {number} width - Page width in inches
  * @param {number} height - Page height in inches
  * @param {string} bookType - Book type
  * @param {string} paperType - Paper type
  * @param {string} inkType - Ink type
+ * @param {string} marginType - Margin type (default, narrow, wide, mirrored, custom, customMirrored)
+ * @param {Object} marginSettings - Custom margin settings (if any)
  */
-function saveDocumentSettings(sizeName, width, height, bookType, paperType, inkType) {
-  const properties = PropertiesService.getDocumentProperties();
-  const settings = {
-    sizeName: sizeName,
-    width: width,
-    height: height,
-    bookType: bookType,
-    paperType: paperType,
-    inkType: inkType,
-    lastUpdated: new Date().toISOString()
-  };
-  
-  properties.setProperty('kdpFormatterSettings', JSON.stringify(settings));
+function saveDocumentSettings(sizeName, width, height, bookType, paperType, inkType, marginType, marginSettings) {
+    const properties = PropertiesService.getDocumentProperties();
+    const settings = {
+        sizeName: sizeName,
+        width: width,
+        height: height,
+        bookType: bookType,
+        paperType: paperType,
+        inkType: inkType,
+        marginType: marginType,
+        customMargins: marginType === 'custom' ? marginSettings : null,
+        customMirroredMargins: marginType === 'customMirrored' ? marginSettings : null,
+        lastUpdated: new Date().toISOString()
+    };
+
+    properties.setProperty('kdpFormatterSettings', JSON.stringify(settings));
 }
